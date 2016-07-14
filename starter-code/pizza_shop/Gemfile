@@ -7,3 +7,4 @@ gem "sinatra-activerecord"
 gem "pg", "~>0.18.2"
 gem "rake"
 gem "tux", "~>0.3.0"
+gem 'rerun'
