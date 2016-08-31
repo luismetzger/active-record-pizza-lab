@@ -1,51 +1,40 @@
-require 'json'
 
 class PizzaShop < Sinatra::Base
 
-  #index route
-  get '/' do
+  require 'json'
 
-    erb :index
+  # GET - Index all
+  get "/pizzas" do
+    @pizzas = Pizza.all.to_json
   end
 
-
-  #RESTful api routes
-
-  #index - show all
-  get '/pizzas' do
-    content_type :json
-    @pizzas = Pizza.all
-    @pizzas.to_json
-  end
-
-  #create - a new pizza
-  post '/pizzas' do
-    body = JSON.parse request.body.read
-    @pizza = Pizza.new(body)
+  # POST - Create a new pizza
+  post "/pizzas" do
+    #these will eventually be real params passed from the client
+    new_pizza = JSON.parse request.body.read
+    @pizza = Pizza.new(new_pizza)
     @pizza.save
-
   end
 
-  #show - show one :id
-  get '/pizzas/:id' do
-    content_type :json
-    @pizza_id = Pizza.find(params[:id].to_i)
-    @pizza_id.to_json
+
+  # GET - Show ID of one pizza
+  get "/pizzas/:id" do
+    @pizza = Pizza.find(params[:id]).to_json
   end
 
-  #update - update a pizza
-  put '/pizzas/:id' do
-    body = JSON.parse request.body.read
-    @find_pizza = Pizza.find(params[:id])
-    @find_pizza.update_atrributes(body)
+
+  # PUT - Update the pizza
+  put "/pizzas/:id" do
+    attributes_to_update = JSON.parse request.body.read
+    @pizza = Pizza.find(params[:id])
+    @pizza.update_attributes(attributes_to_update)
   end
 
-  #destroy pizza
-  delete '/pizzas/:id' do
+
+  # DELETE - Destroy one pizza
+  delete "/pizzas/:id" do
     @pizza = Pizza.find(params[:id])
     @pizza.destroy
   end
-
-
 
 end
